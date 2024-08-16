@@ -23,8 +23,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,7 +48,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(query: String, onQueryChange: (String) -> Unit, onQueryDelete: () -> Unit, citiesList: List<String> =  listOf("City1","City2","City3")) {
+fun GreetingView(query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<String> =  listOf("City1","City2","City3")) {
 
     Column(
     ) {
@@ -65,7 +63,7 @@ fun GreetingView(query: String, onQueryChange: (String) -> Unit, onQueryDelete: 
                 )
             },
             trailingIcon = {
-                IconButton(onClick = onQueryDelete) {
+                IconButton(onClick = onQueryCleared) {
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         tint = MaterialTheme.colorScheme.onBackground,

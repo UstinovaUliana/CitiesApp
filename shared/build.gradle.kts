@@ -35,6 +35,10 @@ kotlin {
             implementation(libs.ktor.logging)
 
             implementation(libs.kodein)
+
+            implementation(libs.mviKotlin)
+            implementation(libs.mviKotlin.main)
+            implementation(libs.mviKotlin.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -58,4 +62,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+dependencies {
+    implementation(libs.androidx.runtime.android)
 }
