@@ -6,53 +6,52 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.ustinovauliana.citiesapp.CitiesRepository
 import com.ustinovauliana.citiesapp.City
-import com.ustinovauliana.citiesapp.di.DiTree.instance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class SearchStoreFactory(private val storeFactory: StoreFactory) {
+internal class SearchStoreFactory(private val storeFactory: StoreFactory,
+                                  private val citiesRepository: CitiesRepository) {
 
     fun create(): SearchStore =
         object : SearchStore, Store<SearchStore.Intent, SearchStore.State, Nothing> by storeFactory.create(
             name = "SearchStore",
             initialState = SearchStore.State(),
-            executorFactory = SearchStoreFactory::ExecutorImpl,
+            executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {
 
         }
 
     private sealed interface Msg {
-        class Cities(val cities: List<City>?) : Msg
+        class CitiesLoaded(val cities: List<City>?) : Msg
     }
 
     private object ReducerImpl : Reducer<SearchStore.State, Msg> {
         override fun SearchStore.State.reduce(msg: Msg): SearchStore.State =
             when (msg) {
-                is Msg.Cities -> copy(cities = msg.cities)
+                is Msg.CitiesLoaded -> copy(cities = msg.cities)
             }
     }
 
-    private class ExecutorImpl : CoroutineExecutor<SearchStore.Intent, Nothing, SearchStore.State, Msg, Nothing>() {
+    private inner class ExecutorImpl : CoroutineExecutor<SearchStore.Intent, Nothing, SearchStore.State, Msg, Nothing>() {
         override fun executeIntent(intent: SearchStore.Intent) {
             when(intent) {
                 is SearchStore.Intent.Search -> search(intent.query)
-                is SearchStore.Intent.Clear -> dispatch(Msg.Cities(null))
+                is SearchStore.Intent.Clear -> dispatch(Msg.CitiesLoaded(null))
             }
         }
 
-        val citiesRepository = instance<CitiesRepository>()
-        private fun search(query: String?) {
+        private fun search(query: String) {
             scope.launch {
                 val cities = withContext(Dispatchers.IO) {
-                    if (query!=null)
+                    if (query!="")
                         citiesRepository.searchCities(query)
                     else
                         emptyList()
                 }
-                dispatch(Msg.Cities(cities))
+                dispatch(Msg.CitiesLoaded(cities))
             }
         }
     }

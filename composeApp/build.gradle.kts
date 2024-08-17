@@ -62,6 +62,11 @@ kotlin {
             implementation(libs.mviKotlin)
             implementation(libs.mviKotlin.main)
             implementation(libs.mviKotlin.coroutines)
+
+            implementation(libs.decompose)
+            implementation(libs.decompose.compose)
+
+            implementation(libs.essenty.lifecycle)
         }
         iosMain.dependencies {
             implementation(libs.ktor.ios)

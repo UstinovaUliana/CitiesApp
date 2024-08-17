@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.ustinovauliana.citiesapp.di.DiTree.instance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +40,7 @@ import kotlinx.coroutines.withContext
 fun App() {
 
     val citiesRepository = instance<CitiesRepository>()
+    /*
     CoroutineScope(Dispatchers.IO).launch {
 
         val cities2 = citiesRepository.searchCities("moscow")
@@ -45,6 +48,8 @@ fun App() {
             println("cities = $cities2")
         }
     }
+
+     */
     MaterialTheme {
         val cities1 = listOf(City("Moscow", "Russia"),
             City("Minsk", "Belarus"),
@@ -72,24 +77,33 @@ fun App() {
             mutableStateOf("enter")
         }
 
+        val root = MainComponent(
+            storeFactory = DefaultStoreFactory(),
+            repository = citiesRepository)
 
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
-            SearchMainView(query, {text -> query = text}, {query = ""}, cities1)
+            SearchMainView(root)
         }
 
     }
 }
 
 @Composable
-fun SearchMainView(query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<City> ) {
+fun SearchMainView(component: MainComponent
+    /*query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<City>*/ ) {
+
+    val model by component.models.subscribeAsState()
 
     Column(
     ) {
-        SearchFieldView(query, onQueryChange, onQueryCleared)
-        CitiesColumnView(citiesList)
+        SearchFieldView(model.query, component::onQueryChange, component::onQueryCleared)
+        if (model.cities!=null) {
+            CitiesColumnView(model.cities!!)
+        } else
+            Text ("Nothing found")
     }
 }
 

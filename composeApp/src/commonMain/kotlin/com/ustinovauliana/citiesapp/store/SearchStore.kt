@@ -5,11 +5,12 @@ import com.ustinovauliana.citiesapp.City
 
 internal interface SearchStore: Store<SearchStore.Intent, SearchStore.State, Nothing> {
     sealed interface Intent {
-        data class Search(val query: String?): Intent
+        data class Search(val query: String): Intent
         object Clear: Intent
     }
 
     data class State(
+        val query: String = "",
         val cities: List<City>? = null
     )
 }
