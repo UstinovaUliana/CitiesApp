@@ -1,7 +1,7 @@
-package com.ustinovauliana.citiesapp
+package com.ustinovauliana.citiesapp.store
 
-import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
+import com.ustinovauliana.citiesapp.City
 
 internal interface SearchStore: Store<SearchStore.Intent, SearchStore.State, Nothing> {
     sealed interface Intent {
@@ -11,10 +11,5 @@ internal interface SearchStore: Store<SearchStore.Intent, SearchStore.State, Not
 
     data class State(
         val cities: List<City>? = null
-    )
-
-    data class City(
-        val name: String,
-        val country: String
     )
 }

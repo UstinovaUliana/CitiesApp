@@ -1,6 +1,7 @@
 package com.ustinovauliana.citiesapp.android
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -26,21 +27,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ustinovauliana.citiesapp.CitiesRepository
+import com.ustinovauliana.citiesapp.City
 import com.ustinovauliana.citiesapp.Greeting
+import com.ustinovauliana.citiesapp.di.DiTree.instance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val citiesRepository = instance<CitiesRepository>()
+        val cities1 = listOf(City("Moscow", "Russia"),
+            City("Minsk", "Belarus"),
+            City("Paris", "France"),
+            City("Beigin", "China"),
+            City("Dubai", "OAE"),
+            City("London", "UK"),
+            City("Washington", "USA"),
+        )
+//        CoroutineScope(Dispatchers.IO).launch {
+//
+//            val cities2 = citiesRepository.searchCities("moscow")
+//            withContext(Dispatchers.Main) {
+//                Log.d("cities", cities2.toString())
+//            }
+//        }
         setContent {
             var query by rememberSaveable {
                 mutableStateOf("enter")
             }
+
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    GreetingView(query, {text -> query = text}, {query = ""})
+                    SearchMainView(query, {text -> query = text}, {query = ""}, cities1)
                 }
             }
         }
@@ -48,7 +73,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<String> =  listOf("City1","City2","City3")) {
+fun SearchMainView(query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<City> ) {
 
     Column(
     ) {
@@ -91,17 +116,17 @@ fun GreetingView(query: String, onQueryChange: (String) -> Unit, onQueryCleared:
 }
 
 @Composable
-private fun CityItem(item: String) {
+private fun CityItem(item: City) {
     Column(
     ) {
         Text(
-            text = item,
+            text = item.name,
             style = MaterialTheme.typography.titleMedium,
 
             modifier = Modifier.padding(10.dp)
         )
         Text(
-            "dsdsd",
+            item.country,
             style = MaterialTheme.typography.bodySmall,
 
             modifier = Modifier.padding(horizontal = 10.dp)
@@ -110,6 +135,7 @@ private fun CityItem(item: String) {
     }
 }
 
+/*
 @Preview(widthDp = 480, heightDp = 1080, showBackground = true)
 @Composable
 fun DefaultPreview() {
@@ -117,6 +143,8 @@ fun DefaultPreview() {
         var query by rememberSaveable {
             mutableStateOf("enter")
         }
-        GreetingView(query, {text -> query = text}, {query = ""})
+        SearchMainView(query, {text -> query = text}, {query = ""})
     }
 }
+
+ */

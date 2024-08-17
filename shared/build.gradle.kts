@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -39,12 +41,17 @@ kotlin {
             implementation(libs.mviKotlin)
             implementation(libs.mviKotlin.main)
             implementation(libs.mviKotlin.coroutines)
-        }
+
+                 }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         androidMain.dependencies {
             implementation(libs.ktor.android)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+
         }
         iosMain.dependencies {
             implementation(libs.ktor.ios)

@@ -1,9 +1,12 @@
-package com.ustinovauliana.citiesapp
+package com.ustinovauliana.citiesapp.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.ustinovauliana.citiesapp.CitiesRepository
+import com.ustinovauliana.citiesapp.City
+import com.ustinovauliana.citiesapp.di.DiTree.instance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -15,14 +18,14 @@ internal class SearchStoreFactory(private val storeFactory: StoreFactory) {
         object : SearchStore, Store<SearchStore.Intent, SearchStore.State, Nothing> by storeFactory.create(
             name = "SearchStore",
             initialState = SearchStore.State(),
-            executorFactory = ::ExecutorImpl,
+            executorFactory = SearchStoreFactory::ExecutorImpl,
             reducer = ReducerImpl
         ) {
 
         }
 
     private sealed interface Msg {
-        class Cities(val cities: List<SearchStore.City>?) : Msg
+        class Cities(val cities: List<City>?) : Msg
     }
 
     private object ReducerImpl : Reducer<SearchStore.State, Msg> {
@@ -40,18 +43,14 @@ internal class SearchStoreFactory(private val storeFactory: StoreFactory) {
             }
         }
 
+        val citiesRepository = instance<CitiesRepository>()
         private fun search(query: String?) {
             scope.launch {
                 val cities = withContext(Dispatchers.IO) {
-                    listOf(
-                        SearchStore.City("Moscow", "Russia"),
-                        SearchStore.City("Minsk", "Belarus"),
-                        SearchStore.City("Paris", "France"),
-                        SearchStore.City("Beigin", "China"),
-                        SearchStore.City("Dubai", "OAE"),
-                        SearchStore.City("London", "UK"),
-                        SearchStore.City("Washington", "USA"),
-                    )
+                    if (query!=null)
+                        citiesRepository.searchCities(query)
+                    else
+                        emptyList()
                 }
                 dispatch(Msg.Cities(cities))
             }
