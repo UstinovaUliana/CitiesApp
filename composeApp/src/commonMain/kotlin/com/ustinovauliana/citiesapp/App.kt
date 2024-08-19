@@ -21,7 +21,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,11 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.ustinovauliana.citiesapp.di.DiTree.instance
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun App() {
@@ -51,31 +46,6 @@ fun App() {
 
      */
     MaterialTheme {
-        val cities1 = listOf(City("Moscow", "Russia"),
-            City("Minsk", "Belarus"),
-            City("Paris", "France"),
-            City("Beigin", "China"),
-            City("Dubai", "OAE"),
-            City("London", "UK"),
-            City("Washington", "USA"),
-            City("Moscow", "Russia"),
-            City("Minsk", "Belarus"),
-            City("Paris", "France"),
-            City("Beigin", "China"),
-            City("Dubai", "OAE"),
-            City("London", "UK"),
-            City("Washington", "USA"),
-            City("Moscow", "Russia"),
-            City("Minsk", "Belarus"),
-            City("Paris", "France"),
-            City("Beigin", "China"),
-            City("Dubai", "OAE"),
-            City("London", "UK"),
-            City("Washington", "USA"),
-        )
-        var query by rememberSaveable {
-            mutableStateOf("enter")
-        }
 
         val root = MainComponent(
             storeFactory = DefaultStoreFactory(),
@@ -96,6 +66,8 @@ fun SearchMainView(component: MainComponent
     /*query: String, onQueryChange: (String) -> Unit, onQueryCleared: () -> Unit, citiesList: List<City>*/ ) {
 
     val model by component.models.subscribeAsState()
+
+
 
     Column(
     ) {
@@ -124,9 +96,13 @@ private fun SearchFieldView(
     onQueryChange: (String) -> Unit,
     onQueryCleared: () -> Unit
 ) {
+    var query1 by remember { mutableStateOf("") }
     TextField(
-        value = query,
-        onValueChange = onQueryChange,
+        value = query1,
+        onValueChange = { onQueryChanged: String ->
+            query1 = onQueryChanged
+            onQueryChange(query1)
+        },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Rounded.Search,
@@ -135,7 +111,10 @@ private fun SearchFieldView(
             )
         },
         trailingIcon = {
-            IconButton(onClick = onQueryCleared) {
+            IconButton(onClick = {
+                query1 = ""
+                onQueryCleared()
+            }) {
                 Icon(
                     imageVector = Icons.Rounded.Clear,
                     tint = MaterialTheme.colors.onBackground,

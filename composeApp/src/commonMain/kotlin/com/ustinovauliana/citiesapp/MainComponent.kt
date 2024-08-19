@@ -1,11 +1,8 @@
 package com.ustinovauliana.citiesapp
 
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.ustinovauliana.citiesapp.di.DiTree.instance
 import com.ustinovauliana.citiesapp.store.SearchStore
 import com.ustinovauliana.citiesapp.store.SearchStoreFactory
 
