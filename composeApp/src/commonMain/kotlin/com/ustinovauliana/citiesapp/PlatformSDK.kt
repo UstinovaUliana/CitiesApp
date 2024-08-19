@@ -7,9 +7,7 @@ import org.kodein.di.DI
 import org.kodein.di.direct
 
 object PlatformSDK {
-    fun init(
-        configuration: PlatformConfiguration
-    ) {
+    fun init(configuration: PlatformConfiguration) {
         DiTree.createDependencies(
             DI {
                 importAll(

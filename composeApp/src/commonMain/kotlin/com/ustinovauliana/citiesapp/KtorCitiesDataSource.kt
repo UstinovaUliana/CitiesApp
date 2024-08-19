@@ -7,18 +7,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class KtorCitiesDataSource(val httpClient: HttpClient) {
-    suspend fun searchCities(query: String): List<CityDTO> {
-        /*
-        return listOf(City("Moscow", "Russia"),
-            City("Minsk", "Belarus"),
-            City("Paris", "France"),
-            City("Beigin", "China"),
-            City("Dubai", "OAE"),
-            City("London", "UK"),
-            City("Washington", "USA"),
-        )
 
-         */
+    suspend fun searchCities(query: String): List<CityDTO> {
+
         return httpClient.get {
             url {
                 contentType(ContentType.Application.Json)
@@ -29,3 +20,4 @@ class KtorCitiesDataSource(val httpClient: HttpClient) {
         }.body()
     }
 }
+

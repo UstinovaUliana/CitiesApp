@@ -12,7 +12,7 @@ interface CitiesMain {
 
     data class Model(
         val query: String,
-        val cities: List<City>?
+        val citiesResult: CitiesResult<List<City>>?
     )
 
     fun onQueryChange(query: String)
@@ -22,7 +22,7 @@ internal val stateToModel: (SearchStore.State) -> CitiesMain.Model =
     {
         CitiesMain.Model(
             query = it.query,
-            cities = it.cities
+            citiesResult = it.citiesResult
         )
     }
 
@@ -36,7 +36,6 @@ class MainComponent(
             storeFactory = storeFactory,
             citiesRepository = repository
         ).create()
-
 
     override val models:  Value<CitiesMain.Model> = store.asValue().map(stateToModel)
 

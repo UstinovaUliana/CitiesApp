@@ -1,6 +1,7 @@
 package com.ustinovauliana.citiesapp.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.ustinovauliana.citiesapp.CitiesResult
 import com.ustinovauliana.citiesapp.City
 
 internal interface SearchStore: Store<SearchStore.Intent, SearchStore.State, Nothing> {
@@ -11,6 +12,6 @@ internal interface SearchStore: Store<SearchStore.Intent, SearchStore.State, Not
 
     data class State(
         val query: String = "",
-        val cities: List<City>? = null
+        val citiesResult: CitiesResult<List<City>>? = CitiesResult.Start()
     )
 }

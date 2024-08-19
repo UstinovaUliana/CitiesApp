@@ -26,6 +26,16 @@ internal val ktorModule = DI.Module("ktorModule") {
             install(ContentNegotiation) {
                 json(json = instance())
             }
+/*
+            HttpResponseValidator {
+                validateResponse { response ->
+                    if (response.status.value !in 200..299) {
+                        println("")
+                    }
+                }
+            }
+
+ */
 
             install(HttpTimeout) {
                 connectTimeoutMillis = 15000
