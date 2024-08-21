@@ -1,9 +1,12 @@
 package com.ustinovauliana.citiesapp
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,10 +19,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,23 +40,26 @@ fun SearchMainView(component: MainComponent) {
     val model by component.models.subscribeAsState()
 
     val queryState = component.rememberEditableUserInputState()
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         SearchFieldView(queryState.queryState,queryState::updateText, queryState::clearText)
         when (model.citiesResult) {
             is CitiesResult.Error -> {
-                Text("error: something went wrong")
+                ErrorView()
             }
 
             is CitiesResult.Success -> {
-                    CitiesColumnView((model.citiesResult as CitiesResult.Success<List<City>>).data)
+                CitiesView((model.citiesResult as CitiesResult.Success<List<City>>).data)
             }
 
             is CitiesResult.Start -> {
-                Text("Start typing!")
+                StartingView()
             }
 
             else -> {
-                CircularProgressIndicator()
+                ProgressView()
             }
         }
 
@@ -57,9 +67,60 @@ fun SearchMainView(component: MainComponent) {
 }
 
 @Composable
-private fun CitiesColumnView(citiesList: List<City>) {
+private fun ErrorView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Default.Error,
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colors.onBackground,
+            contentDescription = "Edit Icon"
+        )
+        Text(
+            text = "error: something went wrong",
+            style = MaterialTheme.typography.h5
+        )
+    }
+}
+
+@Composable
+private fun StartingView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Default.Keyboard,
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colors.onBackground,
+            contentDescription = "Edit Icon"
+        )
+        Text(
+            text = "Start typing!",
+            style = MaterialTheme.typography.h5
+        )
+    }
+
+}
+
+@Composable
+private fun ProgressView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun CitiesView(citiesList: List<City>) {
     if (citiesList.isEmpty()) {
-        Text("Nothing found")
+        NothingView()
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -70,6 +131,26 @@ private fun CitiesColumnView(citiesList: List<City>) {
         }
     }
 
+}
+
+@Composable
+private fun NothingView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Default.QuestionMark,
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colors.onBackground,
+            contentDescription = "Edit Icon"
+        )
+        Text(
+            text = "Nothing found",
+            style = MaterialTheme.typography.h5
+        )
+    }
 }
 
 @Composable
@@ -97,7 +178,7 @@ private fun SearchFieldView(
                 )
             }
         },
-        textStyle = MaterialTheme.typography.h3,
+        textStyle = MaterialTheme.typography.h5,
         singleLine = true,
         shape = RoundedCornerShape(30.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
