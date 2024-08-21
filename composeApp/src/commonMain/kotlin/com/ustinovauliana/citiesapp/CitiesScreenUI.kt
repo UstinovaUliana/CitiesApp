@@ -20,9 +20,6 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,15 +32,16 @@ fun SearchMainView(component: MainComponent) {
 
     val model by component.models.subscribeAsState()
 
+    val queryState = component.rememberEditableUserInputState()
     Column {
-        SearchFieldView(model.query, component::onQueryChange, component::onQueryCleared)
+        SearchFieldView(queryState.queryState,queryState::updateText, queryState::clearText)
         when (model.citiesResult) {
             is CitiesResult.Error -> {
                 Text("error: something went wrong")
             }
 
             is CitiesResult.Success -> {
-                CitiesColumnView((model.citiesResult as CitiesResult.Success<List<City>>).data)
+                    CitiesColumnView((model.citiesResult as CitiesResult.Success<List<City>>).data)
             }
 
             is CitiesResult.Start -> {
@@ -80,13 +78,9 @@ private fun SearchFieldView(
     onQueryChange: (String) -> Unit,
     onQueryCleared: () -> Unit
 ) {
-    var query1 by remember { mutableStateOf("") }
     TextField(
-        value = query1,
-        onValueChange = { onQueryChanged: String ->
-            query1 = onQueryChanged
-            onQueryChange(query1)
-        },
+        value = query,
+        onValueChange = { onQueryChange(it) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Rounded.Search,
@@ -95,10 +89,7 @@ private fun SearchFieldView(
             )
         },
         trailingIcon = {
-            IconButton(onClick = {
-                query1 = ""
-                onQueryCleared()
-            }) {
+            IconButton(onClick = onQueryCleared) {
                 Icon(
                     imageVector = Icons.Rounded.Clear,
                     tint = MaterialTheme.colors.onBackground,

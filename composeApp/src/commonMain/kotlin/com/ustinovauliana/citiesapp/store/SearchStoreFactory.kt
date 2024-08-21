@@ -26,13 +26,13 @@ internal class SearchStoreFactory(private val storeFactory: StoreFactory,
         }
 
     private sealed interface Msg {
-        class CitiesLoaded(val citiesResult: CitiesResult<List<City>>?) : Msg
+        class CitiesLoaded(val query: String, val citiesResult: CitiesResult<List<City>>?) : Msg
     }
 
     private object ReducerImpl : Reducer<SearchStore.State, Msg> {
         override fun SearchStore.State.reduce(msg: Msg): SearchStore.State =
             when (msg) {
-                is Msg.CitiesLoaded -> copy(citiesResult = msg.citiesResult)
+                is Msg.CitiesLoaded -> copy(query = msg.query, citiesResult = msg.citiesResult)
             }
     }
 
@@ -42,16 +42,15 @@ internal class SearchStoreFactory(private val storeFactory: StoreFactory,
             when(intent) {
                 is SearchStore.Intent.Search -> search(intent.query)
                 is SearchStore.Intent.Clear -> clear()
-
             }
         }
 
         private fun clear() {
-            dispatch(Msg.CitiesLoaded(CitiesResult.Start()))
+            dispatch(Msg.CitiesLoaded("",CitiesResult.Start()))
         }
+
         private fun search(query: String) {
-            if (query.isNotEmpty()) {
-                dispatch(Msg.CitiesLoaded(CitiesResult.InProgress()))
+                dispatch(Msg.CitiesLoaded(query, CitiesResult.InProgress()))
                 scope.launch {
                     val citiesResult = withContext(Dispatchers.IO) {
                         try {
@@ -59,13 +58,9 @@ internal class SearchStoreFactory(private val storeFactory: StoreFactory,
                         } catch (e: Exception) {
                             CitiesResult.Error(e)
                         }
-
                     }
-                    dispatch(Msg.CitiesLoaded(citiesResult))
+                    dispatch(Msg.CitiesLoaded(query, citiesResult))
                 }
-            }
-            else
-                dispatch(Msg.CitiesLoaded(CitiesResult.Start()))
         }
     }
 
