@@ -1,7 +1,0 @@
-package com.ustinovauliana.citiesapp
-
-import android.content.Context
-
-actual class PlatformConfiguration constructor(val androidContext: Context) {
-
-}

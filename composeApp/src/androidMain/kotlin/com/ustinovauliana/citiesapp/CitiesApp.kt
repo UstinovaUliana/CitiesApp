@@ -1,6 +1,7 @@
 package com.ustinovauliana.citiesapp
 
 import android.app.Application
+import com.ustinovauliana.citiesapp.platform.PlatformSDK
 
 class CitiesApp: Application() {
     override fun onCreate() {
@@ -12,5 +13,5 @@ class CitiesApp: Application() {
 
 fun CitiesApp.initPlatformSDK() =
     PlatformSDK.init(
-        configuration = PlatformConfiguration(androidContext = applicationContext)
+        configuration = com.ustinovauliana.citiesapp.platform.PlatformConfiguration(androidContext = applicationContext)
     )

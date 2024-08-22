@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CitiesAppMP</string>
+    <string name="error_icon">Error Icon</string>
+    <string name="error_text">Error\nSomething went wrong</string>
+    <string name="keyboard_icon">Keyboard Icon</string>
+    <string name="start_typing">Start typing!</string>
+    <string name="question_mark_icon">Edit Icon</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="clear_icon">Clear Icon</string>
+    <string name="template_country_population">Country: %1$s, population: %2$s.</string>
+</resources>

@@ -6,7 +6,10 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.ustinovauliana.citiesapp.di.DiTree.instance
+import com.ustinovauliana.citiesapp.data.CitiesRepository
+import com.ustinovauliana.citiesapp.platform.DiTree.instance
+import com.ustinovauliana.citiesapp.presentation.SearchMainView
+import com.ustinovauliana.citiesapp.presentation.integration.MainComponent
 
 @Composable
 fun App() {
