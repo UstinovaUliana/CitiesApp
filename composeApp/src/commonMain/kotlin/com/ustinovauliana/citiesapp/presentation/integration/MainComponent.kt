@@ -9,6 +9,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
+import com.arkivanov.essenty.instancekeeper.InstanceKeeperDispatcher
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.ustinovauliana.citiesapp.data.CitiesRepository
 import com.ustinovauliana.citiesapp.domain.models.City
@@ -39,23 +41,17 @@ internal val stateToModel: (SearchStore.State) -> CitiesMain.Model = {
 class MainComponent(
     storeFactory: StoreFactory,
     repository: CitiesRepository,
+    instanceKeeperDispatcher : InstanceKeeperDispatcher
     ): CitiesMain {
 
-    private val store =
-        SearchStoreFactory(
-            storeFactory = storeFactory,
-            citiesRepository = repository
-        ).create()
 
+    private val store = instanceKeeperDispatcher.getStore{
+            SearchStoreFactory(
+                storeFactory = storeFactory,
+                citiesRepository = repository
+            ).create()
+    }
     override val models:  Value<CitiesMain.Model> = store.asValue().map(stateToModel)
-    /*val modelFlow =
-        store.
-            stateFlow.filter { state ->
-                state.query == EditableUserInputState().queryState
-            }
-        .last()
-
-     */
 
     val Saver: Saver<EditableUserInputState, *> = listSaver(
         save = { listOf(it.queryState)},

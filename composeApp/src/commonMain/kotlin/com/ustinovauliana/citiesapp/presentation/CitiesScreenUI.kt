@@ -1,5 +1,6 @@
 package com.ustinovauliana.citiesapp.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,15 +16,16 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -58,7 +60,8 @@ fun SearchMainView(component: MainComponent) {
 
     Column(
         modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 5.dp ),
+            .padding(horizontal = 20.dp, vertical = 5.dp )
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchFieldView(queryState.queryState,queryState::updateText, queryState::clearText)
@@ -89,13 +92,14 @@ private fun ErrorView(exception: Exception) {
         Icon(
             imageVector = Icons.Default.Error,
             modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colors.onBackground,
+            tint = MaterialTheme.colorScheme.onBackground,
             contentDescription = stringResource(Res.string.error_icon)
         )
         Text(
             text = stringResource(Res.string.error_text),
+            color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h5
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
@@ -110,12 +114,13 @@ private fun StartingView() {
         Icon(
             imageVector = Icons.Default.Keyboard,
             modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colors.onBackground,
+            tint = MaterialTheme.colorScheme.onBackground,
             contentDescription = stringResource(Res.string.keyboard_icon),
         )
         Text(
             text = stringResource(Res.string.start_typing),
-            style = MaterialTheme.typography.h5
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge
         )
     }
 
@@ -127,7 +132,9 @@ private fun ProgressView() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+        )
     }
 }
 
@@ -156,12 +163,13 @@ private fun NothingView() {
         Icon(
             imageVector = Icons.Default.QuestionMark,
             modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colors.onBackground,
+            tint = MaterialTheme.colorScheme.onBackground,
             contentDescription = stringResource(Res.string.question_mark_icon),
         )
         Text(
             text = stringResource(Res.string.nothing_found),
-            style = MaterialTheme.typography.h5
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
@@ -178,7 +186,7 @@ private fun SearchFieldView(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Rounded.Search,
-                tint = MaterialTheme.colors.onBackground,
+                tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = stringResource(Res.string.search_icon),
             )
         },
@@ -186,13 +194,20 @@ private fun SearchFieldView(
             IconButton(onClick = onQueryCleared) {
                 Icon(
                     imageVector = Icons.Rounded.Clear,
-                    tint = MaterialTheme.colors.onBackground,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     contentDescription = stringResource(Res.string.clear_icon),
                 )
             }
         },
-        textStyle = MaterialTheme.typography.h4,
+        textStyle = MaterialTheme.typography.headlineMedium,
         singleLine = true,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = MaterialTheme.colorScheme.onBackground,
+            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+            cursorColor = MaterialTheme.colorScheme.secondaryContainer,
+            backgroundColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            ),
         shape = RoundedCornerShape(30.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         modifier = Modifier
@@ -206,12 +221,14 @@ private fun CityItem(item: City) {
     Column {
         Text(
             text = item.name,
-            style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(10.dp)
         )
         Text(
             text = stringResource(Res.string.template_country_population,item.country, item.population?:"unknown"),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(horizontal = 10.dp)
         )
         Divider(Modifier.padding(10.dp), color = Color.Black, thickness = 1.dp)

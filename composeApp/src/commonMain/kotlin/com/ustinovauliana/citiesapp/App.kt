@@ -1,30 +1,34 @@
 package com.ustinovauliana.citiesapp
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.arkivanov.essenty.instancekeeper.InstanceKeeperDispatcher
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.ustinovauliana.citiesapp.data.CitiesRepository
 import com.ustinovauliana.citiesapp.platform.DiTree.instance
 import com.ustinovauliana.citiesapp.presentation.SearchMainView
 import com.ustinovauliana.citiesapp.presentation.integration.MainComponent
+import com.ustinovauliana.citiesapp.presentation.ui.theme.CitiesTheme
 
 @Composable
 fun App() {
 
     val citiesRepository = instance<CitiesRepository>()
+    val instanceKeeperDispatcher = InstanceKeeperDispatcher()
 
-    MaterialTheme {
+    CitiesTheme {
 
         val root = MainComponent(
             storeFactory = DefaultStoreFactory(),
-            repository = citiesRepository)
+            repository = citiesRepository,
+            instanceKeeperDispatcher)
 
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background
         ) {
             SearchMainView(root)
         }
