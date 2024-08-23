@@ -9,11 +9,11 @@ The app is *multiplatform* and supports Android and Desktop targets. The source 
 ## Screenshots
 
 ### Desktop
-<img src="/screenshots/StartView.png" width="400" height="300"> 
-<img src="/screenshots/LoadingView.png" width="400" height="300"> 
-<img src="/screenshots/CitiesColumnView.png" width="400" height="300"> 
-<img src="/screenshots/NothingFoundView.png" width="400" height="300"> 
-<img src="/screenshots/ErrorView.png" width="400" height="300"> 
+<img src="/screenshots/StartView.png" width="600" height="450"> 
+<img src="/screenshots/LoadingView.png" width="600" height="450">  
+<img src="/screenshots/CitiesColumnView.png" width="600" height="450"> 
+<img src="/screenshots/NothinFoundView.png" width="600" height="450"> 
+<img src="/screenshots/ErrorView.png" width="600" height="450"> 
 
 ### Android
 
