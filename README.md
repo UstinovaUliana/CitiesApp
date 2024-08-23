@@ -9,16 +9,14 @@ The app is *multiplatform* and supports Android and Desktop targets. The source 
 ## Screenshots
 
 ### Desktop
-<img src="/screenshots/StartView.png" width="600" height="450"> 
-<img src="/screenshots/LoadingView.png" width="600" height="450">  
-<img src="/screenshots/CitiesColumnView.png" width="600" height="450"> 
-<img src="/screenshots/NothinFoundView.png" width="600" height="450"> 
+<img src="/screenshots/StartView.png" width="600" height="450"> <img src="/screenshots/LoadingView.png" width="600" height="450">  
+<img src="/screenshots/CitiesColumnView.png" width="600" height="450"> <img src="/screenshots/NothinFoundView.png" width="600" height="450"> 
 <img src="/screenshots/ErrorView.png" width="600" height="450"> 
 
 ### Android
+<img src="/screenshots/PhoneScreen.png" width="270" height="600"> 
 
 ### Dark Theme
-<img src="/screenshots/PhoneScreen.png" width="270" height="600"> 
 <img src="/screenshots/DarkThemeView.jpg" width="270" height="600"> 
 
 
