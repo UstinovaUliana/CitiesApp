@@ -1,6 +1,7 @@
 package com.ustinovauliana.citiesapp.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -325,3 +326,11 @@ fun CitiesTheme(
   )
 }
 
+@Composable
+fun searchFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
+    textColor = MaterialTheme.colorScheme.onBackground,
+    focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+    unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+    cursorColor = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor = MaterialTheme.colorScheme.onSecondaryContainer,
+)

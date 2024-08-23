@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.essenty.instancekeeper.InstanceKeeperDispatcher
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.ustinovauliana.citiesapp.data.CitiesRepository
+import com.ustinovauliana.citiesapp.domain.repository.CitiesRepository
 import com.ustinovauliana.citiesapp.platform.DiTree.instance
-import com.ustinovauliana.citiesapp.presentation.SearchMainView
 import com.ustinovauliana.citiesapp.presentation.integration.MainComponent
+import com.ustinovauliana.citiesapp.presentation.ui.SearchMainView
 import com.ustinovauliana.citiesapp.presentation.ui.theme.CitiesTheme
 
 @Composable
@@ -21,18 +21,18 @@ fun App() {
 
     CitiesTheme {
 
-        val root = MainComponent(
+        val mainComponent = MainComponent(
             storeFactory = DefaultStoreFactory(),
             repository = citiesRepository,
-            instanceKeeperDispatcher)
+            instanceKeeperDispatcher
+        )
 
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            SearchMainView(root)
+            SearchMainView(mainComponent)
         }
-
     }
 }
 

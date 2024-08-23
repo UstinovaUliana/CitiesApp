@@ -4,9 +4,9 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.ustinovauliana.citiesapp.data.CitiesRepository
+import com.ustinovauliana.citiesapp.data.models.CitiesRequest
 import com.ustinovauliana.citiesapp.domain.models.City
-import com.ustinovauliana.citiesapp.presentation.CitiesResult
+import com.ustinovauliana.citiesapp.domain.repository.CitiesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.cancelChildren
@@ -26,7 +26,6 @@ internal class SearchStoreFactory(
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl
             ) {
-
         }
 
     private sealed interface Msg {
@@ -56,10 +55,16 @@ internal class SearchStoreFactory(
 
         private fun search(query: String) {
             dispatch(Msg.CitiesLoaded(query, CitiesResult.InProgress()))
-            val job = scope.launch {
+            scope.launch {
                 val citiesResult = withContext(Dispatchers.IO) {
                     try {
-                        CitiesResult.Success(data = citiesRepository.searchCities(query))
+                        CitiesResult.Success(
+                            data = citiesRepository.searchCities(
+                                CitiesRequest(
+                                    query
+                                )
+                            )
+                        )
                     } catch (e: Exception) {
                         CitiesResult.Error(e)
                     }

@@ -34,9 +34,7 @@ internal val ktorModule = DI.Module("ktorModule") {
                     }
                 }
             }
-
  */
-
             install(HttpTimeout) {
                 connectTimeoutMillis = 15000
                 requestTimeoutMillis = 30000

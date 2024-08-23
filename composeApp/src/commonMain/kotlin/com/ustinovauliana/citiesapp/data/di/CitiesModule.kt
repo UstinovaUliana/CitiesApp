@@ -1,8 +1,8 @@
 package com.ustinovauliana.citiesapp.data.di
 
-import com.ustinovauliana.citiesapp.data.CitiesRepository
-import com.ustinovauliana.citiesapp.data.KtorCitiesDataSource
-import com.ustinovauliana.citiesapp.domain.CitiesRepositoryImpl
+import com.ustinovauliana.citiesapp.data.datasource.KtorCitiesDataSource
+import com.ustinovauliana.citiesapp.data.repository.CitiesRepositoryImpl
+import com.ustinovauliana.citiesapp.domain.repository.CitiesRepository
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance

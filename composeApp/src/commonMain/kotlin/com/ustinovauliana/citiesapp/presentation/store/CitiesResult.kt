@@ -1,4 +1,4 @@
-package com.ustinovauliana.citiesapp.presentation
+package com.ustinovauliana.citiesapp.presentation.store
 
 sealed class CitiesResult<T>{
     class InProgress<T> : CitiesResult<T>()

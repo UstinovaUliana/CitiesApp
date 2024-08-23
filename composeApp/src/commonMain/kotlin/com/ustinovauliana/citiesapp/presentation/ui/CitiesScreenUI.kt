@@ -1,4 +1,4 @@
-package com.ustinovauliana.citiesapp.presentation
+package com.ustinovauliana.citiesapp.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Keyboard
@@ -30,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.ustinovauliana.citiesapp.domain.models.City
 import com.ustinovauliana.citiesapp.presentation.integration.MainComponent
+import com.ustinovauliana.citiesapp.presentation.store.CitiesResult
+import com.ustinovauliana.citiesapp.presentation.ui.theme.searchFieldColors
 import me.sample.library.resources.Res
 import me.sample.library.resources.clear_icon
 import me.sample.library.resources.error_icon
@@ -48,8 +49,8 @@ import me.sample.library.resources.question_mark_icon
 import me.sample.library.resources.search_icon
 import me.sample.library.resources.start_typing
 import me.sample.library.resources.template_country_population
+import me.sample.library.resources.unknown
 import org.jetbrains.compose.resources.stringResource
-
 
 @Composable
 fun SearchMainView(component: MainComponent) {
@@ -65,9 +66,10 @@ fun SearchMainView(component: MainComponent) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchFieldView(queryState.queryState,queryState::updateText, queryState::clearText)
+
         when (model.citiesResult) {
             is CitiesResult.Error -> {
-                ErrorView((model.citiesResult as CitiesResult.Error).exception)
+                ErrorView()
             }
             is CitiesResult.Success -> {
                 CitiesView((model.citiesResult as CitiesResult.Success<List<City>>).data)
@@ -79,98 +81,6 @@ fun SearchMainView(component: MainComponent) {
                 ProgressView()
             }
         }
-    }
-}
-
-@Composable
-private fun ErrorView(exception: Exception) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = Icons.Default.Error,
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.onBackground,
-            contentDescription = stringResource(Res.string.error_icon)
-        )
-        Text(
-            text = stringResource(Res.string.error_text),
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
-}
-
-@Composable
-private fun StartingView() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = Icons.Default.Keyboard,
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.onBackground,
-            contentDescription = stringResource(Res.string.keyboard_icon),
-        )
-        Text(
-            text = stringResource(Res.string.start_typing),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
-
-}
-
-@Composable
-private fun ProgressView() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.secondaryContainer,
-        )
-    }
-}
-
-@Composable
-private fun CitiesView(citiesList: List<City>) {
-    if (citiesList.isEmpty()) {
-        NothingView()
-    } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(citiesList) { item ->
-                CityItem(item)
-            }
-        }
-    }
-}
-
-@Composable
-private fun NothingView() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = Icons.Default.QuestionMark,
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.onBackground,
-            contentDescription = stringResource(Res.string.question_mark_icon),
-        )
-        Text(
-            text = stringResource(Res.string.nothing_found),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge
-        )
     }
 }
 
@@ -201,13 +111,7 @@ private fun SearchFieldView(
         },
         textStyle = MaterialTheme.typography.headlineMedium,
         singleLine = true,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = MaterialTheme.colorScheme.onBackground,
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
-            cursorColor = MaterialTheme.colorScheme.secondaryContainer,
-            backgroundColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            ),
+        colors = searchFieldColors(),
         shape = RoundedCornerShape(30.dp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         modifier = Modifier
@@ -226,12 +130,81 @@ private fun CityItem(item: City) {
             modifier = Modifier.padding(10.dp)
         )
         Text(
-            text = stringResource(Res.string.template_country_population,item.country, item.population?:"unknown"),
+            text = stringResource(Res.string.template_country_population,item.country, item.population?: stringResource(Res.string.unknown)),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(horizontal = 10.dp)
         )
-        Divider(Modifier.padding(10.dp), color = Color.Black, thickness = 1.dp)
+        Divider(Modifier.padding(10.dp), color = MaterialTheme.colorScheme.tertiary, thickness = 1.dp)
     }
 }
 
+@Composable
+private fun ErrorView()  = CitiesResultView(
+    resultText = stringResource(Res.string.error_text),
+    iconImage =  Icons.Default.Error,
+    iconDescription = stringResource(Res.string.error_icon)
+)
+
+@Composable
+private fun StartingView() = CitiesResultView(
+    resultText = stringResource(Res.string.start_typing),
+    iconImage =  Icons.Default.Keyboard,
+    iconDescription = stringResource(Res.string.keyboard_icon)
+)
+
+@Composable
+private fun NothingView() = CitiesResultView(
+    resultText = stringResource(Res.string.nothing_found),
+    iconImage = Icons.Default.QuestionMark,
+    iconDescription = stringResource(Res.string.question_mark_icon)
+)
+
+@Composable
+private fun ProgressView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+        )
+    }
+}
+
+@Composable
+private fun CitiesView(citiesList: List<City>) {
+    if (citiesList.isEmpty()) {
+        NothingView()
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(citiesList) { item ->
+                CityItem(item)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CitiesResultView(resultText: String, iconImage: ImageVector, iconDescription: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = iconImage,
+            modifier = Modifier.size(100.dp),
+            tint = MaterialTheme.colorScheme.onBackground,
+            contentDescription = iconDescription,
+        )
+        Text(
+            text = resultText,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge
+        )
+    }
+}

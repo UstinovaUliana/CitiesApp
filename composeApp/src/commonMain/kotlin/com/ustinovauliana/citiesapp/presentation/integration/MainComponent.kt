@@ -12,49 +12,31 @@ import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.essenty.instancekeeper.InstanceKeeperDispatcher
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.ustinovauliana.citiesapp.data.CitiesRepository
-import com.ustinovauliana.citiesapp.domain.models.City
-import com.ustinovauliana.citiesapp.presentation.CitiesResult
+import com.ustinovauliana.citiesapp.domain.repository.CitiesRepository
 import com.ustinovauliana.citiesapp.presentation.store.SearchStore
 import com.ustinovauliana.citiesapp.presentation.store.SearchStoreFactory
+import com.ustinovauliana.citiesapp.presentation.store.mapStateToModel
 import com.ustinovauliana.citiesapp.utils.asValue
-
-interface CitiesMain {
-
-    val models: Value<Model>
-
-    data class Model(
-        val query: String,
-        val citiesResult: CitiesResult<List<City>>?
-    )
-
-    fun onQueryChange(query: String)
-    fun onQueryCleared()
-}
-internal val stateToModel: (SearchStore.State) -> CitiesMain.Model = {
-        CitiesMain.Model(
-            query = it.query,
-            citiesResult = it.citiesResult
-        )
-    }
 
 class MainComponent(
     storeFactory: StoreFactory,
     repository: CitiesRepository,
-    instanceKeeperDispatcher : InstanceKeeperDispatcher
-    ): CitiesMain {
+    instanceKeeperDispatcher: InstanceKeeperDispatcher
+) : CitiesMain {
 
-
-    private val store = instanceKeeperDispatcher.getStore{
-            SearchStoreFactory(
-                storeFactory = storeFactory,
-                citiesRepository = repository
-            ).create()
+    private val store = instanceKeeperDispatcher.getStore {
+        SearchStoreFactory(
+            storeFactory = storeFactory,
+            citiesRepository = repository
+        ).create()
     }
-    override val models:  Value<CitiesMain.Model> = store.asValue().map(stateToModel)
 
-    val Saver: Saver<EditableUserInputState, *> = listSaver(
-        save = { listOf(it.queryState)},
+    override val models: Value<CitiesMain.Model> = store.asValue().map {
+        it.mapStateToModel()
+    }
+
+    private val citiesSaver: Saver<EditableUserInputState, *> = listSaver(
+        save = { listOf(it.queryState) },
         restore = {
             EditableUserInputState()
         }
@@ -67,6 +49,7 @@ class MainComponent(
             queryState = newText
             onQueryChange(newText)
         }
+
         fun clearText() {
             queryState = ""
             onQueryCleared()
@@ -75,7 +58,7 @@ class MainComponent(
 
     @Composable
     fun rememberEditableUserInputState(): EditableUserInputState =
-        rememberSaveable(saver = Saver) {
+        rememberSaveable(saver = citiesSaver) {
             EditableUserInputState()
         }
 
@@ -88,6 +71,5 @@ class MainComponent(
         EditableUserInputState().queryState = ""
         store.accept(SearchStore.Intent.Clear)
     }
-
 
 }

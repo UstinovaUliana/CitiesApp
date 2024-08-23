@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CitiesRequest (
     val query: String,
-    val limit: String,
+    val limit: String = "100",
 )
