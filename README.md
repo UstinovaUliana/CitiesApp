@@ -4,7 +4,7 @@ App allows users to search cities by its name.
 For this app I've used https://api-ninjas.com/api/city API.
 
 ## Technology stack
-The app is *multiplatform* and supports Android and Desktop targets. The source code is written in *Kotlin*. I've used *Jetpack Compose* for layout, *Ktor* for network interaction, *Kotlin Coroutines* for reactive programming, *Kodein* for dependency injection, *MVI* and *MVIKotlin* for architeecture.
+The app is *multiplatform* and supports Android and Desktop targets. The source code is written in *Kotlin*. I've used *Compose Multiplatform* for layout, *Ktor* for network interaction, *Kotlin Coroutines* for reactive programming, *Kodein* for dependency injection, *MVI* and *MVIKotlin* for architecture.
 
 ## Screenshots
 
